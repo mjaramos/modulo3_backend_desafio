@@ -3,6 +3,8 @@ import cors from 'cors';
 import winston from 'winston';
 import proprietarioRouter from './routes/proprietario.route.js';
 import animalRouter from './routes/animal.route.js';
+import servicoRouter from './routes/servico.route.js';
+import postRouter from './routes/post.route.js';
 
 const { combine, timestamp, label, printf } = winston.format;
 const myFormat = printf(({ level, message, label, timestamp }) => {
@@ -24,6 +26,8 @@ app.use(cors());
 
 app.use('/proprietario', proprietarioRouter);
 app.use('/animal', animalRouter);
+app.use('/servico', servicoRouter);
+app.use('/post', postRouter);
 
 app.use((err, req, res, next) => {
   if (err.message) {

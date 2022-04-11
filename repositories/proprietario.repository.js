@@ -1,82 +1,50 @@
-import { connect } from './db.js';
+import Proprietario from '../models/proprietario.model.js';
 
 async function insertProprietario(proprietario) {
-  const conn = await connect();
-
   try {
-    const sql =
-      'INSERT INTO proprietarios (nome, telefone) VALUES ($1, $2) RETURNING *';
-    const values = [proprietario.nome, proprietario.telefone];
-
-    const res = await conn.query(sql, values);
-
-    return res.rows[0];
+    return await Proprietario.create(proprietario);
   } catch (error) {
     throw error;
-  } finally {
-    conn.release();
   }
 }
 
 async function getProprietarios() {
-  const conn = await connect();
-
   try {
-    const res = await conn.query(
-      'SELECT * FROM proprietarios ORDER BY proprietario_id'
-    );
-    return res.rows;
+    return await Proprietario.findAll();
   } catch (error) {
-  } finally {
-    conn.release();
+    throw error;
   }
 }
 
 async function getProprietario(id) {
-  const conn = await connect();
-
   try {
-    const sql = 'SELECT * FROM proprietarios WHERE proprietario_id = $1';
-    const values = [id];
-    const res = await conn.query(sql, values);
-    return res.rows[0];
+    return await Proprietario.findByPk(id, { raw: true });
   } catch (error) {
-  } finally {
-    conn.release();
+    throw error;
   }
 }
 
 async function deleteProprietario(id) {
-  const conn = await connect();
-
   try {
-    const sql = 'DELETE FROM proprietarios WHERE proprietario_id = $1';
-    const values = [id];
-    await conn.query(sql, values);
+    return await Proprietario.destroy({
+      where: {
+        proprietarioId: id,
+      },
+    });
   } catch (error) {
-  } finally {
-    conn.release();
+    throw error;
   }
 }
 
 async function updateProprietario(proprietario) {
-  const conn = await connect();
-
   try {
-    const sql =
-      'UPDATE proprietarios SET nome = $1, telefone = $2 WHERE proprietario_id = $3 RETURNING *';
-    const values = [
-      proprietario.nome,
-      proprietario.telefone,
-      proprietario.proprietario_id,
-    ];
-
-    const res = await conn.query(sql, values);
-
-    return res.rows[0];
+    return await Proprietario.update(proprietario, {
+      where: {
+        proprietarioId: proprietario.proprietarioId,
+      },
+    });
   } catch (error) {
-  } finally {
-    conn.release();
+    throw error;
   }
 }
 
